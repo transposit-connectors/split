@@ -1,0 +1,881 @@
+openapi: 3.0.0
+servers: 
+  - url: https://api.split.io/internal/api/v2
+info:
+  description: API for Split.io
+  version: v2
+  title: Split.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+externalDocs:
+  url: https://docs.split.io/reference
+paths:
+  /workspaces:
+    get:
+      description: Get Workspaces
+      operationId: get_workspaces
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The maximum limit to return per call. Max=20.
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 20
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  '/environments/ws/{ws_id}':
+    get:
+      description: Get Environments
+      operationId: get_environments
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    post:
+      description: Create Environment
+      operationId: create_environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the name of the environment
+              required: 
+              - name
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/ws_id'
+  '/environments/ws/{ws_id}/{environment_name_or_id}':
+    delete:
+      description: Delete Environment
+      operationId: delete_environment
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    patch:
+      description: Update Environment
+      operationId: update_environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the attributes of a environment to be updated in JsonPatch format
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/environment_name_or_id'
+      - $ref: '#/components/parameters/ws_id'
+  '/trafficTypes/ws/{ws_id}':
+    get:
+      description: Get Traffic Types
+      operationId: get_traffic_types
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/ws_id'
+  '/schema/ws/{ws_id}/trafficTypes/{traffic_type_id_or_name}':
+    get:
+      description: Get Attributes
+      operationId: get_attributes
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    post:
+      description: Save Attribute
+      operationId: save_attribute
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/traffic_type_id_or_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/schema/ws/{ws_id}/trafficTypes/{traffic_type_id_or_name}/{attribute_id}':
+    delete:
+      description: Delete Attribute
+      operationId: delete_attribute
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/attribute_id'
+      - $ref: '#/components/parameters/traffic_type_id_or_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/trafficTypes/{traffic_type_id}/environments/{environment_id}/identities/{key}':
+    post:
+      description: Save Identity
+      operationId: save_identity
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    patch:
+      description: Update Identity
+      operationId: update_identity
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    delete:
+      description: Delete Identity
+      operationId: delete_identity
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/key'
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/traffic_type_id'
+  '/trafficTypes/{traffic_type_id}/environments/{environment_id}/identities':
+    post:
+      description: Save Identities
+      operationId: save_identities
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/traffic_type_id'
+  '/segments/ws/{ws_id}/trafficTypes/{traffic_type_id_or_name}':
+    post:
+      description: Create Segment
+      operationId: create_segment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the name and description of the Split.
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/traffic_type_id_or_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/segments/ws/{ws_id}/{segment_name}':
+    delete:
+      description: Delete Segment
+      operationId: delete_segment
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/segments/{environment_id}/{segment_name}':
+    post:
+      description: Enable Segment in Environment
+      operationId: enable_segment_in_environment
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    delete:
+      description: Deactivate Segment in Environment
+      operationId: deactivate_segment_in_environment
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/environment_id'
+  '/segments/ws/{ws_id}':
+    get:
+      description: List Segments
+      operationId: list_segments
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The maximum segments to return per call. Max=50
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 50
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/ws_id'
+  '/segments/ws/{ws_id}/environments/{environment_name_or_id}':
+    get:
+      description: List Segments in Environment
+      operationId: list_segments_in_environment
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The maximum segments to return per call. Max=50
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 50
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/ws_id'
+      - $ref: '#/components/parameters/environment_name_or_id'
+  '/segments/{environment_id}/{segment_name}/upload':
+    put:
+      description: Update Segment Keys in Environment via CSV
+      operationId: update_segment_keys_in_environment_via_csv
+      parameters:
+        - name: replace
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Replace the content of the segment (if it previously exists) with the new content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: The location of the file to upload
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/environment_id'
+  '/segments/{environment_id}/{segment_name}/uploadKeys':
+    put:
+      description: Update Segment Keys in Environment via JSON
+      operationId: update_segment_keys_in_environment_via_json
+      parameters:
+        - name: replace
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Replace the content of the segment (if it previously exists) with the new content
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/environment_id'
+  '/segments/{environment_id}/{segment_name}/keys':
+    get:
+      description: Get Segment Keys in Environment
+      operationId: get_segment_keys_in_environment
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The maximum keys to return per call. Max=100.
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 100
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/environment_id'
+  '/segments/{environment_id}/{segment_name}/removeKeys':
+    put:
+      description: Remove Segment Keys from Environment
+      operationId: remove_segment_keys_from_environment
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/segment_name'
+      - $ref: '#/components/parameters/environment_id'
+  '/splits/ws/{ws_id}/trafficTypes/{traffic_type_id_or_name}':
+    post:
+      description: Create Split
+      operationId: create_split
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the name and description of the Split.
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '409':
+          description: code 409
+    parameters:
+      - $ref: '#/components/parameters/traffic_type_id_or_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/':
+    get:
+      description: List Splits
+      operationId: list_splits
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The maximum split metadatas to return per call. Max=50.
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+          description: repeatable tag parameter(s) to query by
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 50
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    parameters:
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/{split_name}':
+    get:
+      description: Get Split
+      operationId: get_split
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    delete:
+      description: Delete Split
+      operationId: delete_split
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/split_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/{split_name}/updateDescription':
+    put:
+      description: Update Split Description
+      operationId: update_split_description
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON Object with the description
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    parameters:
+      - $ref: '#/components/parameters/split_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/{split_name}/environments/{environment_name_or_id}':
+    post:
+      description: Create Split Definition in Environment
+      operationId: create_split_definition_in_environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the split
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '409':
+          description: code 409
+    get:
+      description: Get Split Definition in Environment
+      operationId: get_split_definition_in_environment
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    patch:
+      description: Partial Update Split Definition in Environment
+      operationId: partial_update_split_definition_in_environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the attributes of a split to be updated in JsonPatch format
+      parameters:
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Describe and explain the change you're making
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    put:
+      description: Full Update Split Definition in Environment
+      operationId: full_update_split_definition_in_environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON object that contains the full split definition to be updated
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    delete:
+      description: Remove Split Definition from Environment
+      operationId: remove_split_definition_from_environment
+      parameters:
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Describe and explain the change you're making
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/environment_name_or_id'
+      - $ref: '#/components/parameters/split_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/environments/{environment_name_or_id}':
+    get:
+      description: Lists Split Definitions in Environment
+      operationId: lists_split_definitions_in_environment
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The offset to retrieve. Useful for pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The maximum splits to return per call. Max=50.
+      x-pagination:
+        resultsPath: objects
+        offset:
+          offsetParam: offset
+          limitParam: limit
+          maxLimit: 50
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+    parameters:
+      - $ref: '#/components/parameters/environment_name_or_id'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/{split_name}/environments/{environment_name_or_id}/kill':
+    put:
+      description: Kill Split in Environment
+      operationId: kill_split_in_environment
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+    parameters:
+      - $ref: '#/components/parameters/environment_name_or_id'
+      - $ref: '#/components/parameters/split_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/splits/ws/{ws_id}/{split_name}/environments/{environment_name_or_id/restore':
+    put:
+      description: Restore Split in Environment
+      operationId: restore_split_in_environment
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+    parameters:
+      - $ref: '#/components/parameters/split_name'
+      - $ref: '#/components/parameters/ws_id'
+  '/changeRequests/{change_request_id}':
+    get:
+      description: Get Change Request
+      operationId: get_change_request
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    put:
+      description: Withdraw Change Request
+      operationId: withdraw_change_request
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/change_request_id'
+  '/changeRequests/ws/{ws_id}/environments/{environment_id}':
+    post:
+      description: Submit Change Request
+      operationId: submit_change_request
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/ws_id'
+  '/tags/ws/{ws_id}object/{object_name}/objecttype/{object_type}':
+    post:
+      description: Associate Tags
+      operationId: associate_tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              description: End state of tags assocated with the object
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request
+    parameters:
+      - $ref: '#/components/parameters/object_type'
+      - $ref: '#/components/parameters/object_name'
+      - $ref: '#/components/parameters/ws_id'
+  /events:
+    post:
+      description: Create Event
+      operationId: create_event
+      parameters:
+        - name: SplitSDKVersion
+          in: header
+          required: false
+          schema:
+            type: string
+          description: This is your sdk and version appended with a '-' in between.
+        - name: SplitSDKMachineName
+          in: header
+          required: false
+          schema:
+            type: string
+          description: The name of the machine issuing the request.
+        - name: SplitSDKMachineIP
+          in: header
+          required: false
+          schema:
+            type: string
+          description: The IP address of the machine issuing the request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '202':
+          description: code 202
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+  /events/bulk:
+    post:
+      description: Create Events
+      operationId: create_events
+      parameters:
+        - name: SplitSDKVersion
+          in: header
+          required: false
+          schema:
+            type: string
+          description: This is your sdk and version appended with a '-' in between.
+        - name: SplitSDKMachineName
+          in: header
+          required: false
+          schema:
+            type: string
+          description: The name of the machine issuing the request.
+        - name: SplitSDKMachineIP
+          in: header
+          required: false
+          schema:
+            type: string
+          description: The IP address of the machine issuing the request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '202':
+          description: code 202
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+components:
+  parameters:
+    environment_name_or_id:
+      name: environment_name_or_id
+      in: path
+      schema:
+        type: string
+      required: true
+      description: Environment name or ID
+    traffic_type_id_or_name:
+      name: traffic_type_id_or_name
+      in: path
+      schema:
+        type: string
+      required: true
+      description: The ID or name of the traffic type
+    ws_id:
+      name: ws_id
+      in: path
+      schema:
+        type: string
+      required: true
+      description: The ID of the workspace
+    attribute_id:
+      name: attribute_id
+      in: path
+      schema:
+        type: string
+      required: true
+    key:
+      name: key
+      in: path
+      schema:
+        type: string
+      required: true
+    environment_id:
+      name: environment_id
+      in: path
+      schema:
+        type: string
+      required: true
+      description: the ID of the environment
+    traffic_type_id:
+      name: traffic_type_id
+      in: path
+      schema:
+        type: string
+      required: true
+    segment_name:
+      name: segment_name
+      in: path
+      schema:
+        type: string
+      required: true
+    split_name:
+      name: split_name
+      in: path
+      schema:
+        type: string
+      required: true
+    change_request_id:
+      name: change_request_id
+      in: path
+      schema:
+        type: string
+      required: true
+    object_type:
+      name: object_type
+      in: path
+      schema:
+        type: string
+      required: true
+    object_name:
+      name: object_name
+      in: path
+      schema:
+        type: string
+      required: true

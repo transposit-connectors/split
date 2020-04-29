@@ -1,0 +1,16 @@
+{
+  "v2": {
+    "swagger": {
+      "auth": {
+        "description": "Create an Admin API key through the Admin Settings > API Keys. Enter in the format 'Bearer <ADMIN_API_TOKEN>'.",
+        "params": {
+          "header": {
+            "string": "Authorization"
+          }
+        },
+        "type": "HEADER"
+      },
+      "source": "split.yml"
+    }
+  }
+}
