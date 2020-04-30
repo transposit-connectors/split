@@ -2,7 +2,7 @@ openapi: 3.0.0
 servers: 
   - url: https://api.split.io/internal/api/v2
 info:
-  description: API for Split.io
+  description: Admin API for Split.io
   version: v2
   title: Split.io
   license:
@@ -13,8 +13,8 @@ externalDocs:
 paths:
   /workspaces:
     get:
-      description: Get Workspaces
-      operationId: get_workspaces
+      description: List Workspaces
+      operationId: list_workspaces
       parameters:
         - name: offset
           in: query
@@ -43,8 +43,8 @@ paths:
           description: Forbidden
   '/environments/ws/{ws_id}':
     get:
-      description: Get Environments
-      operationId: get_environments
+      description: List Environments
+      operationId: list_environments
       responses:
         '200':
           description: Success
@@ -96,8 +96,8 @@ paths:
       - $ref: '#/components/parameters/ws_id'
   '/trafficTypes/ws/{ws_id}':
     get:
-      description: Get Traffic Types
-      operationId: get_traffic_types
+      description: List Traffic Types
+      operationId: list_traffic_types
       responses:
         '200':
           description: Success
@@ -107,8 +107,8 @@ paths:
       - $ref: '#/components/parameters/ws_id'
   '/schema/ws/{ws_id}/trafficTypes/{traffic_type_id_or_name}':
     get:
-      description: Get Attributes
-      operationId: get_attributes
+      description: List Attributes
+      operationId: list_attributes
       responses:
         '200':
           description: Success
@@ -357,8 +357,8 @@ paths:
       - $ref: '#/components/parameters/environment_id'
   '/segments/{environment_id}/{segment_name}/keys':
     get:
-      description: Get Segment Keys in Environment
-      operationId: get_segment_keys_in_environment
+      description: List Segment Keys in Environment
+      operationId: list_segment_keys_in_environment
       parameters:
         - name: offset
           in: query
