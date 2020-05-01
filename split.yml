@@ -663,7 +663,7 @@ paths:
       - $ref: '#/components/parameters/environment_name_or_id'
       - $ref: '#/components/parameters/split_name'
       - $ref: '#/components/parameters/ws_id'
-  '/splits/ws/{ws_id}/{split_name}/environments/{environment_name_or_id/restore':
+  '/splits/ws/{ws_id}/{split_name}/environments/{environment_name_or_id}/restore':
     put:
       description: Restore Split in Environment
       operationId: restore_split_in_environment
@@ -677,6 +677,7 @@ paths:
         '500':
           description: Internal server error
     parameters:
+      - $ref: '#/components/parameters/environment_name_or_id'
       - $ref: '#/components/parameters/split_name'
       - $ref: '#/components/parameters/ws_id'
   '/changeRequests/{change_request_id}':
