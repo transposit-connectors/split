@@ -12,7 +12,7 @@
       },
       "source": "split.yml"
     },
-    "description": "Split.io API",
+    "description": "Split.io",
     "displayName": "Split.io"
   }
 }
